@@ -1,5 +1,5 @@
 /**
- * Simple performance benchmarks for İmece
+ * Simple performance benchmarks for imece
  * Run: npx tsx benchmarks/simple.bench.ts
  */
 

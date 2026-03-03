@@ -15,12 +15,12 @@ A review pipeline ensures code quality through systematic review:
 ## Setup
 
 ```bash
-npx imece init --desc "Code review pipeline demo"
+npx @oxog/imece init --desc "Code review pipeline demo"
 
 # Register team
-npx imece register ali "lead-architect" --caps "architecture,review" --lead
-npx imece register zeynep "senior-dev" --caps "typescript,review,api"
-npx imece register mehmet "developer" --caps "javascript,frontend"
+npx @oxog/imece register ali "lead-architect" --caps "architecture,review" --lead
+npx @oxog/imece register zeynep "senior-dev" --caps "typescript,review,api"
+npx @oxog/imece register mehmet "developer" --caps "javascript,frontend"
 ```
 
 ## Review Workflow
@@ -31,17 +31,17 @@ Mehmet has been working on a feature:
 
 ```bash
 # 1. Lock files for final edits
-npx imece lock mehmet src/components/UserProfile.tsx
-npx imece lock mehmet src/hooks/useUser.ts
+npx @oxog/imece lock mehmet src/components/UserProfile.tsx
+npx @oxog/imece lock mehmet src/hooks/useUser.ts
 
 # 2. Final edits...
 
 # 3. Unlock
-npx imece unlock mehmet src/components/UserProfile.tsx
-npx imece unlock mehmet src/hooks/useUser.ts
+npx @oxog/imece unlock mehmet src/components/UserProfile.tsx
+npx @oxog/imece unlock mehmet src/hooks/useUser.ts
 
 # 4. Submit for review
-npx imece send mehmet zeynep "PR: User Profile Component" \
+npx @oxog/imece send mehmet zeynep "PR: User Profile Component" \
   --body "Implemented user profile component with:\n- Avatar display\n- Profile editing\n- Form validation\n\nFiles changed:\n- src/components/UserProfile.tsx\n- src/hooks/useUser.ts\n- src/types/user.ts\n\nPlease review when you have time." \
   --type review-request \
   --priority normal
@@ -53,45 +53,45 @@ Zeynep receives the review request:
 
 ```bash
 # 1. Check inbox
-npx imece inbox zeynep
+npx @oxog/imece inbox zeynep
 
 # 2. Read the request
-npx imece read zeynep <msg-id>
+npx @oxog/imece read zeynep <msg-id>
 
 # 3. Lock files to prevent changes during review
-npx imece lock zeynep src/components/UserProfile.tsx
-npx imece lock zeynep src/hooks/useUser.ts
+npx @oxog/imece lock zeynep src/components/UserProfile.tsx
+npx @oxog/imece lock zeynep src/hooks/useUser.ts
 
 # 4. Review the code...
 
 # 5. Send feedback
-npx imece send zeynep mehmet "Review: User Profile" \
+npx @oxog/imece send zeynep mehmet "Review: User Profile" \
   --body "Overall great work! A few suggestions:\n\n1. **Avatar component**: Consider extracting to separate component for reusability\n\n2. **Error handling**: The useUser hook doesn't handle network errors gracefully\n\n3. **Type safety**: The User type should use readonly for ID fields\n\n4. **Testing**: Missing unit tests for the profile form validation\n\nPlease address #2 and #4, others are optional." \
   --type message
 
 # 6. Unlock
-npx imece unlock zeynep src/components/UserProfile.tsx
-npx imece unlock zeynep src/hooks/useUser.ts
+npx @oxog/imece unlock zeynep src/components/UserProfile.tsx
+npx @oxog/imece unlock zeynep src/hooks/useUser.ts
 ```
 
 ### Step 3: Mehmet Addresses Feedback
 
 ```bash
 # 1. Read feedback
-npx imece inbox mehmet
-npx imece reply mehmet <review-msg-id> "Thanks for the review! Working on these now."
+npx @oxog/imece inbox mehmet
+npx @oxog/imece reply mehmet <review-msg-id> "Thanks for the review! Working on these now."
 
 # 2. Lock and fix
-npx imece lock mehmet src/hooks/useUser.ts
+npx @oxog/imece lock mehmet src/hooks/useUser.ts
 # ... fix error handling ...
-npx imece unlock mehmet src/hooks/useUser.ts
+npx @oxog/imece unlock mehmet src/hooks/useUser.ts
 
-npx imece lock mehmet src/components/UserProfile.test.tsx
+npx @oxog/imece lock mehmet src/components/UserProfile.test.tsx
 # ... add tests ...
-npx imece unlock mehmet src/components/UserProfile.test.tsx
+npx @oxog/imece unlock mehmet src/components/UserProfile.test.tsx
 
 # 3. Respond with changes
-npx imece send mehmet zeynep "Review feedback addressed" \
+npx @oxog/imece send mehmet zeynep "Review feedback addressed" \
   --body "Changes made:\n1. ✅ Added error handling in useUser hook with retry logic\n2. ✅ Added comprehensive tests for form validation\n3. ⏭️ Will extract Avatar component in follow-up PR\n4. ⏭️ Readonly types will be addressed in type refactor\n\nReady for re-review!" \
   --type message
 ```
@@ -99,11 +99,11 @@ npx imece send mehmet zeynep "Review feedback addressed" \
 ### Step 4: Zeynep Approves
 
 ```bash
-npx imece inbox zeynep
+npx @oxog/imece inbox zeynep
 
 # Quick re-check...
 
-npx imece send zeynep mehmet "LGTM! ✅" \
+npx @oxog/imece send zeynep mehmet "LGTM! ✅" \
   --body "Changes look good. Approved for merge!" \
   --type approval
 ```
@@ -114,13 +114,13 @@ For critical changes, the lead also reviews:
 
 ```bash
 # Mehmet requests lead review
-npx imece send mehmet ali "Ready for final review" \
+npx @oxog/imece send mehmet ali "Ready for final review" \
   --body "Zeynep has approved. This touches auth flow, so requesting your review too." \
   --type review-request
 
 # Ali reviews and approves
-npx imece inbox ali
-npx imece send ali mehmet "Approved" \
+npx @oxog/imece inbox ali
+npx @oxog/imece send ali mehmet "Approved" \
   --body "Auth flow changes look solid. Approved for merge." \
   --type approval
 ```
@@ -132,13 +132,13 @@ npx imece send ali mehmet "Approved" \
 For small, low-risk changes:
 
 ```bash
-npx imece send mehmet zeynep "Quick review: Bug fix" \
+npx @oxog/imece send mehmet zeynep "Quick review: Bug fix" \
   --body "One-line fix for null pointer exception in utils.ts" \
   --type review-request \
   --priority low
 
 # Zeynep can quick-approve
-npx imece reply zeynep <msg-id> "LGTM, ship it!"
+npx @oxog/imece reply zeynep <msg-id> "LGTM, ship it!"
 ```
 
 ### Deep Review
@@ -146,14 +146,14 @@ npx imece reply zeynep <msg-id> "LGTM, ship it!"
 For complex architectural changes:
 
 ```bash
-npx imece send mehmet ali "Deep review: State management refactor" \
+npx @oxog/imece send mehmet ali "Deep review: State management refactor" \
   --body "Refactoring from Redux to Zustand.\n\nArchitecture doc: docs/arch/state-management-v2.md\nMigration plan: docs/migration/redux-to-zustand.md\n\nThis affects the entire app, so please review carefully." \
   --type review-request \
   --priority high \
   --expects-reply
 
 # Schedule a discussion
-npx imece broadcast ali "Architecture review meeting needed for state management refactor"
+npx @oxog/imece broadcast ali "Architecture review meeting needed for state management refactor"
 ```
 
 ### Emergency Review
@@ -161,16 +161,16 @@ npx imece broadcast ali "Architecture review meeting needed for state management
 For hotfixes:
 
 ```bash
-npx imece send mehmet zeynep "URGENT: Security fix" \
+npx @oxog/imece send mehmet zeynep "URGENT: Security fix" \
   --body "Fixing XSS vulnerability in user input rendering.\n\nNeeds immediate review and deploy." \
   --type review-request \
   --priority urgent
 
 # Zeynep drops everything
-npx imece send zeynep mehmet "Reviewing now" --type status-update
+npx @oxog/imece send zeynep mehmet "Reviewing now" --type status-update
 
 # Quick review and approve
-npx imece send zeynep mehmet "Approved for hotfix" \
+npx @oxog/imece send zeynep mehmet "Approved for hotfix" \
   --body "Fix looks correct. Approved for immediate deploy." \
   --type approval \
   --priority urgent
@@ -210,15 +210,15 @@ Sometimes changes need significant rework:
 
 ```bash
 # Zeynep rejects with clear reasoning
-npx imece send zeynep mehmet "Needs rework" \
+npx @oxog/imece send zeynep mehmet "Needs rework" \
   --body "I think we need a different approach here. The current implementation has race conditions that will cause issues at scale.\n\nLet's discuss the approach before you continue. I'll schedule a call." \
   --type rejection
 
 # Mehmet acknowledges
-npx imece reply mehmet <rejection-msg-id> "Understood. Happy to discuss better approaches."
+npx @oxog/imece reply mehmet <rejection-msg-id> "Understood. Happy to discuss better approaches."
 
 # Create a task to redesign
-npx imece task create zeynep mehmet "Redesign user state management" \
+npx @oxog/imece task create zeynep mehmet "Redesign user state management" \
   --desc "Address race conditions identified in review" \
   --criteria "Thread-safe implementation,Load testing passed,Reviewed by Zeynep"
 ```
@@ -229,16 +229,16 @@ Use tasks to track review workflow:
 
 ```bash
 # Create a review task
-npx imece task create mehmet zeynep "Review: User Profile PR" \
+npx @oxog/imece task create mehmet zeynep "Review: User Profile PR" \
   --desc "Review PR for User Profile component" \
   --criteria "Code reviewed,Feedback provided,Changes addressed,Approved"
 
 # Zeynep claims and works through it
-npx imece task claim <review-task-id> zeynep
-npx imece task note <review-task-id> zeynep "Initial review complete, waiting for changes"
+npx @oxog/imece task claim <review-task-id> zeynep
+npx @oxog/imece task note <review-task-id> zeynep "Initial review complete, waiting for changes"
 # ... changes come in ...
-npx imece task note <review-task-id> zeynep "Re-reviewed, approved"
-npx imece task complete <review-task-id> zeynep --note "Approved with minor suggestions"
+npx @oxog/imece task note <review-task-id> zeynep "Re-reviewed, approved"
+npx @oxog/imece task complete <review-task-id> zeynep --note "Approved with minor suggestions"
 ```
 
 ## Multiple Reviewers
@@ -247,17 +247,17 @@ For changes needing multiple perspectives:
 
 ```bash
 # Mehmet requests review from both backend and frontend experts
-npx imece send mehmet zeynep "Review: Full-stack feature" \
+npx @oxog/imece send mehmet zeynep "Review: Full-stack feature" \
   --body "Please review the frontend aspects" \
   --type review-request
 
-npx imece send mehmet ali "Review: Full-stack feature" \
+npx @oxog/imece send mehmet ali "Review: Full-stack feature" \
   --body "Please review the API design" \
   --type review-request
 
 # Both approve
-npx imece send zeynep mehmet "Frontend LGTM" --type approval
-npx imece send ali mehmet "API design approved" --type approval
+npx @oxog/imece send zeynep mehmet "Frontend LGTM" --type approval
+npx @oxog/imece send ali mehmet "API design approved" --type approval
 ```
 
 ## Review Metrics
@@ -266,13 +266,13 @@ Track review activity via timeline:
 
 ```bash
 # See all reviews
-npx imece timeline --type review-request
+npx @oxog/imece timeline --type review-request
 
 # See approval rate (manually track)
-npx imece search "approval"
+npx @oxog/imece search "approval"
 
 # See average review time
-npx imece timeline --limit 50 | grep "review"
+npx @oxog/imece timeline --limit 50 | grep "review"
 ```
 
 ## Best Practices

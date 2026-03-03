@@ -1,4 +1,4 @@
-# İmece Implementation Guide
+# imece Implementation Guide
 
 ## Module Organization
 

@@ -5,10 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-03-03
+
+### Changed
+- Scoped package name to `@oxog/imece` for npm availability
+- Updated all CLI references from `npx imece` to `npx @oxog/imece`
+- Moved documentation files to `docs/` directory
+- CLI command remains `imece` when installed globally
+
 ## [1.0.0] - 2026-03-03
 
 ### Added
-- Initial release of İmece
+- Initial release of imece
 - Universal multi-agent coordination system for AI code assistants
 - File-based IPC with zero runtime dependencies
 - TypeScript strict mode support with `exactOptionalPropertyTypes`
@@ -21,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Timeline**: Append-only event log for debugging and audit trails
 
 ### CLI Commands
-- `init` - Initialize İmece workspace
+- `init` - Initialize imece workspace
 - `status` - Show swarm status
 - `register` - Register a new agent
 - `send` - Send messages between agents
@@ -53,4 +61,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cross-platform testing (Linux, Windows, macOS)
 - Node.js 22+ support
 
+[1.0.1]: https://github.com/ersinkoc/imece/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ersinkoc/imece/releases/tag/v1.0.0

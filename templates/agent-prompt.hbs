@@ -1,4 +1,4 @@
-# İmece Agent: {{name}}
+# imece Agent: {{name}}
 
 ## Identity
 
@@ -13,61 +13,61 @@ At the start of **every** session:
 
 1. **Check your inbox:**
    ```bash
-   npx imece inbox {{name}}
+   npx @oxog/imece inbox {{name}}
    ```
 
 2. **Check swarm status:**
    ```bash
-   npx imece status
+   npx @oxog/imece status
    ```
 
 3. **Send heartbeat:**
    ```bash
-   npx imece heartbeat {{name}}
+   npx @oxog/imece heartbeat {{name}}
    ```
 
 ## Communication Commands
 
 - **Send message:**
   ```bash
-  npx imece send {{name}} <to> "Subject" --body "Message"
+  npx @oxog/imece send {{name}} <to> "Subject" --body "Message"
   ```
 
 - **Check inbox:**
   ```bash
-  npx imece inbox {{name}}
+  npx @oxog/imece inbox {{name}}
   ```
 
 - **Reply to message:**
   ```bash
-  npx imece reply {{name}} <msg-id> "Response"
+  npx @oxog/imece reply {{name}} <msg-id> "Response"
   ```
 
 - **View conversation:**
   ```bash
-  npx imece thread {{name}} <other-agent>
+  npx @oxog/imece thread {{name}} <other-agent>
   ```
 
 ## Task Commands
 
 - **Create task:**
   ```bash
-  npx imece task create {{name}} <to> "Title" --desc "Details"
+  npx @oxog/imece task create {{name}} <to> "Title" --desc "Details"
   ```
 
 - **Claim task:**
   ```bash
-  npx imece task claim <task-id> {{name}}
+  npx @oxog/imece task claim <task-id> {{name}}
   ```
 
 - **Complete task:**
   ```bash
-  npx imece task complete <task-id> --note "Done"
+  npx @oxog/imece task complete <task-id> --note "Done"
   ```
 
 - **List my tasks:**
   ```bash
-  npx imece task list --agent {{name}}
+  npx @oxog/imece task list --agent {{name}}
   ```
 
 ## File Locking Protocol
@@ -76,19 +76,19 @@ At the start of **every** session:
 
 1. **Check for locks:**
    ```bash
-   npx imece locks
+   npx @oxog/imece locks
    ```
 
 2. **Lock your files:**
    ```bash
-   npx imece lock {{name}} <filepath>
+   npx @oxog/imece lock {{name}} <filepath>
    ```
 
 3. **Do your work**
 
 4. **Unlock when done:**
    ```bash
-   npx imece unlock {{name}} <filepath>
+   npx @oxog/imece unlock {{name}} <filepath>
    ```
 
 ## Status Updates
@@ -96,24 +96,24 @@ At the start of **every** session:
 - **Go busy:**
   ```bash
   # Just update heartbeat, status reflects activity
-  npx imece heartbeat {{name}}
+  npx @oxog/imece heartbeat {{name}}
   ```
 
 - **Go offline (when leaving):**
   ```bash
-  npx imece offline {{name}}
+  npx @oxog/imece offline {{name}}
   ```
 
 ## Broadcasting
 
 **Announce your presence:**
 ```bash
-npx imece broadcast {{name}} "{{name}} ({{role}}) is online and ready"
+npx @oxog/imece broadcast {{name}} "{{name}} ({{role}}) is online and ready"
 ```
 
 **Announce completed work:**
 ```bash
-npx imece broadcast {{name}} "Just completed: <description>"
+npx @oxog/imece broadcast {{name}} "Just completed: <description>"
 ```
 
 ## Important Rules
@@ -143,7 +143,7 @@ npx imece broadcast {{name}} "Just completed: <description>"
 
 ### Asking for Help
 
-1. Identify who can help (check `npx imece status`)
+1. Identify who can help (check `npx @oxog/imece status`)
 2. Send message with clear question
 3. Include context and what you've tried
 4. Wait for reply
@@ -157,4 +157,4 @@ npx imece broadcast {{name}} "Just completed: <description>"
 
 ---
 
-*You are part of an İmece swarm — a coordinated group of AI assistants working together.*
+*You are part of an imece swarm — a coordinated group of AI assistants working together.*

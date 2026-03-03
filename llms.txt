@@ -1,24 +1,24 @@
-# İmece - Universal Multi-Agent Coordination
+# imece - Universal Multi-Agent Coordination
 
 ## Package Information
 
 - **Name**: imece
-- **Version**: 1.0.0
+- **Version**: 1.0.1
 - **Description**: File-based IPC system that lets multiple AI code assistants coordinate, communicate, and delegate tasks on the same codebase
 - **Author**: Ersin Koç (ersinkoc)
 - **License**: MIT
 - **Repository**: https://github.com/ersinkoc/imece
 
-## What is İmece?
+## What is imece?
 
-İmece is a universal multi-agent coordination protocol inspired by Claude Code's Agent Teams. It enables any AI code assistant (Claude, Cursor, Windsurf, Copilot, Cline, Aider, etc.) to:
+imece is a universal multi-agent coordination protocol inspired by Claude Code's Agent Teams. It enables any AI code assistant (Claude, Cursor, Windsurf, Copilot, Cline, Aider, etc.) to:
 
 - **Communicate** via inbox-based messaging
 - **Coordinate** via shared task lists
 - **Collaborate** without conflicts via file locking
 - **Track** all activity via append-only timeline
 
-Unlike Claude Code's built-in Agent Teams (which is Claude-only and experimental), İmece is:
+Unlike Claude Code's built-in Agent Teams (which is Claude-only and experimental), imece is:
 - **Universal**: Works with any AI assistant that can read/write files
 - **File-based**: No servers, sockets, or databases
 - **Zero dependencies**: Uses only Node.js built-in APIs
@@ -27,35 +27,35 @@ Unlike Claude Code's built-in Agent Teams (which is Claude-only and experimental
 ## Installation
 
 ```bash
-npm install imece
+npm install @oxog/imece
 # or
-npx imece <command>
+npx @oxog/imece <command>
 ```
 
 ## Quick Start
 
 ```bash
 # Initialize imece in your project
-npx imece init --desc "My multi-agent project"
+npx @oxog/imece init --desc "My multi-agent project"
 
 # Register agents
-npx imece register ali lead-architect --caps "arch,api" --lead
-npx imece register zeynep frontend-dev --caps "react,css"
+npx @oxog/imece register ali lead-architect --caps "arch,api" --lead
+npx @oxog/imece register zeynep frontend-dev --caps "react,css"
 
 # Send messages
-npx imece send ali zeynep "Review needed" --body "Please review the auth PR"
+npx @oxog/imece send ali zeynep "Review needed" --body "Please review the auth PR"
 
 # Check inbox
-npx imece inbox zeynep
+npx @oxog/imece inbox zeynep
 
 # Create and assign tasks
-npx imece task create ali zeynep "Build login form" --priority high
+npx @oxog/imece task create ali zeynep "Build login form" --priority high
 
 # Lock files before editing
-npx imece lock zeynep src/components/Login.tsx
+npx @oxog/imece lock zeynep src/components/Login.tsx
 
 # View status
-npx imece status
+npx @oxog/imece status
 ```
 
 ## Core Concepts
@@ -78,7 +78,7 @@ Advisory locking to prevent edit conflicts. Before editing any file, agents shou
 ## API Overview
 
 ```typescript
-import { ImeceManager } from 'imece';
+import { ImeceManager } from '@oxog/imece';
 
 const imece = new ImeceManager();
 
@@ -190,10 +190,10 @@ await imece.timeline.broadcast('ali', 'Starting major refactor');
 AI assistants should:
 
 1. Check `.imece/` at the start of every conversation
-2. Run `npx imece inbox <name>` to check for messages
-3. Run `npx imece status` to understand swarm state
-4. Lock files before editing with `npx imece lock`
-5. Update heartbeat regularly with `npx imece heartbeat`
+2. Run `npx @oxog/imece inbox <name>` to check for messages
+3. Run `npx @oxog/imece status` to understand swarm state
+4. Lock files before editing with `npx @oxog/imece lock`
+5. Update heartbeat regularly with `npx @oxog/imece heartbeat`
 
 See `skill/SKILL.md` for the complete AI skill file.
 

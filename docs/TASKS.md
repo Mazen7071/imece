@@ -1,4 +1,4 @@
-# İmece Implementation Tasks
+# imece Implementation Tasks
 
 ## Status: COMPLETE ✓
 

@@ -265,7 +265,7 @@ export interface FileLock {
 // ═══════════════════════════════════════
 
 /**
- * İmece settings
+ * imece settings
  */
 export interface ImeceSettings {
   /** Seconds before agent considered stale (default: 300 = 5 min) */
@@ -277,7 +277,7 @@ export interface ImeceSettings {
 }
 
 /**
- * İmece configuration stored in imece.json
+ * imece configuration stored in imece.json
  * @example
  * {
  *   project: 'my-app',
@@ -292,7 +292,7 @@ export interface ImeceConfig {
   project: string;
   /** ISO 8601 UTC timestamp of creation */
   created: string;
-  /** İmece version */
+  /** imece version */
   version: string;
   /** Optional project description */
   description?: string | undefined;

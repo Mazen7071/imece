@@ -1,8 +1,8 @@
-# İmece Specification
+# imece Specification
 
 ## Overview
 
-**İmece** is a file-based IPC (Inter-Process Communication) system that enables multiple AI code assistants to coordinate, communicate, and delegate tasks on the same codebase. It works with any AI tool, any terminal, and any OS.
+**imece** is a file-based IPC (Inter-Process Communication) system that enables multiple AI code assistants to coordinate, communicate, and delegate tasks on the same codebase. It works with any AI tool, any terminal, and any OS.
 
 ## Core Philosophy
 
@@ -15,7 +15,7 @@
 
 ```
 .any-project/
-├── .imece/                          # İmece workspace (hidden)
+├── .imece/                          # imece workspace (hidden)
 │   ├── imece.json                   # Swarm metadata + config
 │   ├── agents/                      # One JSON per agent
 │   │   ├── ali.json

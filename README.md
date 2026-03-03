@@ -1,15 +1,15 @@
-# 🤝 İmece
+# 🤝 imece
 
 > Universal multi-agent coordination for AI code assistants — like *imece*, the Anatolian tradition of working together
 
-[![npm](https://img.shields.io/npm/v/imece)](https://www.npmjs.com/package/imece)
+[![npm](https://img.shields.io/npm/v/@oxog/imece)](https://www.npmjs.com/package/@oxog/imece)
 [![CI](https://github.com/ersinkoc/imece/actions/workflows/ci.yml/badge.svg)](https://github.com/ersinkoc/imece/actions)
 [![license](https://img.shields.io/npm/l/imece)](LICENSE)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)]()
 
-## What is İmece?
+## What is imece?
 
-**İmece** (/imeˈdʒe/) is a Turkish tradition where an entire village comes together to accomplish a task no single person could do alone.
+**imece** (/imeˈdʒe/) is a Turkish tradition where an entire village comes together to accomplish a task no single person could do alone.
 
 **This package** brings that same spirit to AI code assistants. It's a file-based IPC (Inter-Process Communication) system that lets multiple AI agents coordinate, communicate, and collaborate on the same codebase — regardless of which AI tools you're using.
 
@@ -21,7 +21,7 @@
 
 ### The Solution
 
-İmece provides:
+imece provides:
 - 📬 **Inbox messaging** — Agents send messages to each other
 - 📋 **Shared task board** — Kanban-style task management
 - 🔒 **File locking** — Prevent edit conflicts
@@ -32,10 +32,10 @@
 
 ```bash
 # Install locally in your project
-npm install --save-dev imece
+npm install --save-dev @oxog/imece
 
 # Or use npx (no install needed)
-npx imece <command>
+npx @oxog/imece <command>
 ```
 
 Requirements: Node.js ≥ 22
@@ -44,34 +44,34 @@ Requirements: Node.js ≥ 22
 
 ```bash
 # 1. Initialize imece in your project
-npx imece init --desc "Multi-agent web app"
+npx @oxog/imece init --desc "Multi-agent web app"
 
 # 2. Register your first agent
-npx imece register ali architect --caps "arch,api,db" --lead
+npx @oxog/imece register ali architect --caps "arch,api,db" --lead
 
 # 3. Check status
-npx imece status
+npx @oxog/imece status
 
 # 4. Ali sends a task to another agent (when they're registered)
-npx imece task create ali zeynep "Build auth API" --priority high
+npx @oxog/imece task create ali zeynep "Build auth API" --priority high
 
 # 5. Zeynep checks her inbox
-npx imece inbox zeynep
+npx @oxog/imece inbox zeynep
 
 # 6. Zeynep locks files before editing
-npx imece lock zeynep src/api/auth.ts
+npx @oxog/imece lock zeynep src/api/auth.ts
 
 # 7. Zeynep completes the task
-npx imece task complete <task-id> --note "All tests passing"
+npx @oxog/imece task complete <task-id> --note "All tests passing"
 ```
 
 ## How It Works
 
-İmece uses a simple file-based protocol:
+imece uses a simple file-based protocol:
 
 ```
 your-project/
-├── .imece/                    # İmece workspace
+├── .imece/                    # imece workspace
 │   ├── imece.json            # Configuration
 │   ├── agents/               # Agent profiles
 │   │   ├── ali.json
@@ -152,7 +152,7 @@ imece prompt <name> <role> [--caps <list>] [--model <m>]
 ## Using as a Library
 
 ```typescript
-import { ImeceManager } from 'imece';
+import { ImeceManager } from '@oxog/imece';
 
 const imece = new ImeceManager();
 
@@ -202,28 +202,28 @@ If you're an AI assistant reading this:
 **At the start of EVERY session, run:**
 ```bash
 # 1. Check for messages
-npx imece inbox <your-name>
+npx @oxog/imece inbox <your-name>
 
 # 2. Check swarm status
-npx imece status
+npx @oxog/imece status
 
 # 3. Send heartbeat
-npx imece heartbeat <your-name>
+npx @oxog/imece heartbeat <your-name>
 ```
 
 **Before editing ANY file:**
 ```bash
-npx imece lock <your-name> <filepath>
+npx @oxog/imece lock <your-name> <filepath>
 ```
 
 **When done:**
 ```bash
-npx imece unlock <your-name> <filepath>
+npx @oxog/imece unlock <your-name> <filepath>
 ```
 
 Install the skill file for complete protocol reference:
 ```bash
-npx imece install-skill
+npx @oxog/imece install-skill
 # Creates .skills/imece/SKILL.md
 ```
 
@@ -233,34 +233,34 @@ npx imece install-skill
 
 ```bash
 # Terminal 1 - Claude Code as "ali" (Lead Architect)
-npx imece register ali "lead-architect" --caps "architecture,api,review" --lead
+npx @oxog/imece register ali "lead-architect" --caps "architecture,api,review" --lead
 
 # Terminal 2 - Cursor as "zeynep" (Frontend Dev)
-npx imece register zeynep "frontend-dev" --caps "react,css,ui"
+npx @oxog/imece register zeynep "frontend-dev" --caps "react,css,ui"
 
 # Ali delegates work
-npx imece task create ali zeynep "Build login form" \
+npx @oxog/imece task create ali zeynep "Build login form" \
   --desc "Create a login form with email and password" \
   --criteria "Form validation,Error messages,Loading states" \
   --priority high
 
 # Zeynep checks inbox, claims task, locks files, works, completes
-npx imece inbox zeynep
-npx imece task claim <task-id> zeynep
-npx imece lock zeynep src/components/LoginForm.tsx
+npx @oxog/imece inbox zeynep
+npx @oxog/imece task claim <task-id> zeynep
+npx @oxog/imece lock zeynep src/components/LoginForm.tsx
 # ... do work ...
-npx imece task complete <task-id> --note "Done with all criteria"
-npx imece unlock zeynep src/components/LoginForm.tsx
+npx @oxog/imece task complete <task-id> --note "Done with all criteria"
+npx @oxog/imece unlock zeynep src/components/LoginForm.tsx
 
 # Ali reviews
-npx imece send zeynep ali "Ready for review" --type status-update
+npx @oxog/imece send zeynep ali "Ready for review" --type status-update
 ```
 
 See the `examples/` directory for more patterns.
 
 ## Architecture
 
-İmece is designed to be:
+imece is designed to be:
 
 - **Zero dependencies** — Uses only Node.js built-in APIs
 - **ESM only** — Modern JavaScript modules

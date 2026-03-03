@@ -74,7 +74,7 @@ function parseArgs(argv: string[]): ParsedArgs {
  */
 function showHelp(): void {
   console.log(`
-${colors.bold}${colors.cyan}İmece${colors.reset} - Universal Multi-Agent Coordination
+${colors.bold}${colors.cyan}imece${colors.reset} - Universal Multi-Agent Coordination
 
 ${colors.bold}Usage:${colors.reset} imece <command> [options]
 
@@ -149,7 +149,7 @@ async function handleInit(args: ParsedArgs): Promise<void> {
 
   try {
     await imece.init(desc);
-    success('İmece initialized successfully');
+    success('imece initialized successfully');
     console.log(`  Project: ${colors.cyan}${await imece.getConfig().then(c => c?.project)}${colors.reset}`);
     console.log(`  Directory: ${colors.gray}.imece/${colors.reset}`);
     if (desc) {
@@ -165,7 +165,7 @@ async function handleStatus(): Promise<void> {
   const imece = new ImeceManager();
 
   if (!(await imece.isInitialized())) {
-    error('İmece is not initialized. Run: imece init');
+    error('imece is not initialized. Run: imece init');
     process.exit(1);
   }
 
@@ -247,7 +247,7 @@ async function handleReset(): Promise<void> {
   const imece = new ImeceManager();
 
   if (!(await imece.isInitialized())) {
-    error('İmece is not initialized');
+    error('imece is not initialized');
     process.exit(1);
   }
 
@@ -256,7 +256,7 @@ async function handleReset(): Promise<void> {
 
   if (args.flags.confirm) {
     await imece.reset();
-    success('İmece has been reset');
+    success('imece has been reset');
   }
 }
 
@@ -264,7 +264,7 @@ async function handleRegister(args: ParsedArgs): Promise<void> {
   const imece = new ImeceManager();
 
   if (!(await imece.isInitialized())) {
-    error('İmece is not initialized. Run: imece init');
+    error('imece is not initialized. Run: imece init');
     process.exit(1);
   }
 

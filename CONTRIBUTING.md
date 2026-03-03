@@ -1,6 +1,6 @@
-# Contributing to İmece
+# Contributing to imece
 
-Thank you for your interest in contributing to İmece! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to imece! This document provides guidelines and instructions for contributing.
 
 ## Development Setup
 
@@ -153,7 +153,7 @@ describe('myFunction', () => {
 
 ### Zero Dependencies
 
-İmece has zero runtime dependencies. Only use Node.js built-in APIs.
+imece has zero runtime dependencies. Only use Node.js built-in APIs.
 
 ### Atomic Writes
 

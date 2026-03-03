@@ -1,5 +1,5 @@
 /**
- * İmece - Universal Multi-Agent Coordination for AI Code Assistants
+ * imece - Universal Multi-Agent Coordination for AI Code Assistants
  *
  * A file-based IPC system that lets multiple AI code assistants coordinate,
  * communicate, and delegate tasks on the same codebase.

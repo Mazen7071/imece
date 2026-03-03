@@ -63,7 +63,7 @@ export class ImeceManager {
    */
   async init(description?: string): Promise<void> {
     if (await this.isInitialized()) {
-      throw new Error('İmece is already initialized. Use reset() to start over.');
+      throw new Error('imece is already initialized. Use reset() to start over.');
     }
 
     // Create directory structure
@@ -95,7 +95,7 @@ export class ImeceManager {
     await this.timeline.append({
       agent: 'system',
       event: 'broadcast',
-      message: `İmece initialized: ${config.project}`,
+      message: `imece initialized: ${config.project}`,
       data: { description }
     });
   }
@@ -225,7 +225,7 @@ export class ImeceManager {
 
     if (!copied) {
       // If copy fails, create a placeholder with essential info
-      const placeholder = `# İmece Skill
+      const placeholder = `# imece Skill
 
 See https://github.com/ersinkoc/imece for documentation.
 `;
@@ -261,7 +261,7 @@ See https://github.com/ersinkoc/imece for documentation.
     const model = options?.model ?? 'unknown';
     const isLead = options?.isLead ?? false;
 
-    return `# İmece Agent: ${name}
+    return `# imece Agent: ${name}
 
 ## Identity
 
@@ -274,36 +274,36 @@ See https://github.com/ersinkoc/imece for documentation.
 
 At the start of every session:
 
-1. **Check your inbox:** \`npx imece inbox ${name}\`
-2. **Check swarm status:** \`npx imece status\`
-3. **Send heartbeat:** \`npx imece heartbeat ${name}\`
+1. **Check your inbox:** \`npx @oxog/imece inbox ${name}\`
+2. **Check swarm status:** \`npx @oxog/imece status\`
+3. **Send heartbeat:** \`npx @oxog/imece heartbeat ${name}\`
 
 ## Communication Commands
 
-- Send message: \`npx imece send ${name} <to> "Subject" --body "Message"\`
-- Check inbox: \`npx imece inbox ${name}\`
-- Reply to message: \`npx imece reply ${name} <msg-id> "Response"\`
+- Send message: \`npx @oxog/imece send ${name} <to> "Subject" --body "Message"\`
+- Check inbox: \`npx @oxog/imece inbox ${name}\`
+- Reply to message: \`npx @oxog/imece reply ${name} <msg-id> "Response"\`
 
 ## Task Commands
 
-- Create task: \`npx imece task create ${name} <to> "Title" --desc "Details"\`
-- Claim task: \`npx imece task claim <task-id> ${name}\`
-- Complete task: \`npx imece task complete <task-id> --note "Done"\`
+- Create task: \`npx @oxog/imece task create ${name} <to> "Title" --desc "Details"\`
+- Claim task: \`npx @oxog/imece task claim <task-id> ${name}\`
+- Complete task: \`npx @oxog/imece task complete <task-id> --note "Done"\`
 
 ## File Locking Protocol
 
 Before editing ANY file:
 
-1. **Check for locks:** \`npx imece locks\`
-2. **Lock your files:** \`npx imece lock ${name} <filepath>\`
+1. **Check for locks:** \`npx @oxog/imece locks\`
+2. **Lock your files:** \`npx @oxog/imece lock ${name} <filepath>\`
 3. **Work on the file**
-4. **Unlock when done:** \`npx imece unlock ${name} <filepath>\`
+4. **Unlock when done:** \`npx @oxog/imece unlock ${name} <filepath>\`
 
 ## Self-Introduction
 
 When joining a swarm, broadcast your presence:
 
-\`npx imece broadcast ${name} "${name} (${role}) is online and ready"\`
+\`npx @oxog/imece broadcast ${name} "${name} (${role}) is online and ready"\`
 
 ## Rules
 
@@ -316,7 +316,7 @@ When joining a swarm, broadcast your presence:
 
 ---
 
-*This agent is part of an İmece swarm - a coordinated group of AI assistants.*
+*This agent is part of an imece swarm - a coordinated group of AI assistants.*
 `;
   }
 

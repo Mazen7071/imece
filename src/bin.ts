@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * İmece CLI Entry Point
+ * imece CLI Entry Point
  *
  * Usage: imece <command> [options]
  *

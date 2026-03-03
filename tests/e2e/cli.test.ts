@@ -46,7 +46,7 @@ describe('CLI E2E', () => {
       const { stdout, exitCode } = await runCli(['--help'], tempDir);
 
       expect(exitCode).toBe(0);
-      expect(stdout).toContain('İmece');
+      expect(stdout).toContain('imece');
       expect(stdout).toContain('init');
       expect(stdout).toContain('status');
       expect(stdout).toContain('register');
