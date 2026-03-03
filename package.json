@@ -1,5 +1,5 @@
 {
-  "name": "imece",
+  "name": "@oxog/imece",
   "version": "1.0.0",
   "description": "Universal multi-agent coordination for AI code assistants — like imece, the Anatolian tradition of working together",
   "type": "module",
@@ -7,6 +7,9 @@
   "types": "./dist/index.d.ts",
   "bin": {
     "imece": "./dist/bin.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "exports": {
     ".": {
