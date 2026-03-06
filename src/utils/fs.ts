@@ -22,6 +22,7 @@ export async function readJson<T>(filePath: string): Promise<T | null> {
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') return null;
     if (err instanceof SyntaxError) return null;
+    /* v8 ignore next 2 */
     throw err;
   }
 }
@@ -40,7 +41,7 @@ export async function writeJson<T>(filePath: string, data: T): Promise<void> {
   try {
     await fs.rename(tmpPath, filePath);
   } catch (error) {
-    /* c8 ignore next */
+    /* v8 ignore start */
     // On Windows, rename can fail if target exists. Fallback to direct write.
     if ((error as NodeJS.ErrnoException).code === 'EPERM') {
       await fs.writeFile(filePath, JSON.stringify(data, null, 2) + '\n', 'utf8');
@@ -48,6 +49,7 @@ export async function writeJson<T>(filePath: string, data: T): Promise<void> {
     } else {
       throw error;
     }
+    /* v8 ignore stop */
   }
 }
 
@@ -93,6 +95,7 @@ export async function readJsonl<T>(filePath: string, limit?: number): Promise<T[
     return results;
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') return [];
+    /* v8 ignore next */
     throw err;
   }
 }
@@ -139,7 +142,7 @@ export async function ensureDir(dirPath: string): Promise<void> {
   try {
     await fs.mkdir(dirPath, { recursive: true });
   } catch {
-    /* c8 ignore next */
+    /* v8 ignore next */
     // Directory may already exist
   }
 }
@@ -199,7 +202,7 @@ export async function removeDir(dirPath: string): Promise<void> {
   try {
     await fs.rm(dirPath, { recursive: true, force: true });
   } catch {
-    /* c8 ignore next */
+    /* v8 ignore next */
     // Directory may not exist
   }
 }

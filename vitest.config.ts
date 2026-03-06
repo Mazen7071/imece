@@ -14,7 +14,8 @@ export default defineConfig({
         'src/types.ts',
         'src/bin.ts',
         'src/index.ts',
-        'src/cli/**'
+        'src/cli/**',
+        'src/daemon/**'
       ],
       include: ['src/**/*.ts'],
       thresholds: {

@@ -127,7 +127,37 @@ export {
 } from './utils/fs.js';
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// DAEMON / TRIGGER SYSTEM
+// ═══════════════════════════════════════════════════════════════════════════════
+
+export { AgentTriggerSystem } from './daemon/trigger.js';
+export {
+  createNotification,
+  PriorityQueue,
+  getAgentAvailability,
+  detectConflict,
+  findBestAgent,
+  generateAutoResponse,
+  AUTO_RESPONSES,
+  calculateRetryDelay,
+  determineRecoveryStrategy,
+  DEFAULT_RECOVERY_CONFIG,
+} from './daemon/trigger.js';
+
+export type {
+  AgentNotification,
+  NotificationType,
+  QueueItem,
+  AgentAvailability,
+  AgentConflict,
+  RecoveryResult,
+  RecoveryStrategy,
+  RecoveryConfig,
+  AutoResponseTemplate,
+} from './daemon/trigger.js';
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // VERSION
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export const VERSION = '1.0.4';
+export const VERSION = '1.0.5';

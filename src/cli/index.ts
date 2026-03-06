@@ -134,6 +134,14 @@ ${colors.bold}Quick Commands:${colors.reset}
   assign <title> --to-role <role>   Assign task by role
   notify <from> <message>           Notify all online agents
   standup                           Show team standup summary
+  watch [--agent <name>] [--interval <s>] [--all]
+                                    Real-time swarm monitoring
+  daemon <start|stop|status|trigger>
+                                    Background agent coordination
+                                    start [--interval <ms>] - Start daemon
+                                    stop                   - Stop daemon
+                                    status                 - Check status
+                                    trigger <agent>        - Trigger agent
 
 ${colors.bold}Skill Commands:${colors.reset}
   install-skill [--dir <path>]      Install SKILL.md
@@ -1306,6 +1314,326 @@ function detectModel(): string {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// WATCH COMMAND - Real-time swarm monitoring
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function handleWatch(args: ParsedArgs): Promise<void> {
+  const imece = new ImeceManager();
+  const agent = args.flags.agent as string | undefined;
+  const interval = parseInt(args.flags.interval as string) || 5;
+  const watchAll = args.flags.all === true;
+
+  if (!(await imece.isInitialized())) {
+    error('imece is not initialized. Run: imece init');
+    process.exit(1);
+  }
+
+  console.log(`${colors.bold}${colors.cyan}🔄 IMECE WATCH MODE${colors.reset}`);
+  console.log(`${colors.gray}Monitoring swarm every ${interval}s...${colors.reset}`);
+  console.log(`${colors.gray}Press Ctrl+C to exit${colors.reset}\n`);
+
+  let lastEventCount = 0;
+  let lastMessageCount: Record<string, number> = {};
+
+  const clearScreen = () => {
+    process.stdout.write('\x1b[2J\x1b[H');
+  };
+
+  const render = async () => {
+    const status = await imece.getStatus({ timelineLimit: 10 });
+    if (!status) return;
+
+    const now = new Date().toLocaleTimeString();
+
+    // Header
+    console.log(`${colors.bold}${colors.cyan}🤝 İMECE STATUS${colors.reset} ${colors.gray}[${now}]${colors.reset}`);
+    console.log('─'.repeat(50));
+
+    // Agents
+    const onlineAgents = status.agents.filter(a => a.status !== 'offline');
+    const offlineAgents = status.agents.filter(a => a.status === 'offline');
+
+    console.log(`\n${colors.bold}👥 AGENTS${colors.reset} (${onlineAgents.length} online, ${offlineAgents.length} offline)`);
+    for (const agent of status.agents) {
+      const isOnline = agent.status !== 'offline';
+      const statusIcon = isOnline ? `${colors.green}●${colors.reset}` : `${colors.red}○${colors.reset}`;
+      const leadIcon = agent.isLead ? ' 👑' : '';
+      const taskInfo = agent.currentTask ? ` [${agent.currentTask}]` : '';
+      console.log(`  ${statusIcon} ${agent.name} (${agent.role})${leadIcon}${taskInfo}`);
+    }
+
+    // Tasks
+    console.log(`\n${colors.bold}📋 TASKS${colors.reset}`);
+    console.log(`  Backlog: ${status.taskSummary.backlog}  │  Active: ${colors.yellow}${status.taskSummary.active}${colors.reset}  │  Done: ${colors.green}${status.taskSummary.done}${colors.reset}  │  Blocked: ${colors.red}${status.taskSummary.blocked}${colors.reset}`);
+
+    // Recent timeline (only new events)
+    const newEvents = status.recentTimeline.slice(0, 5);
+    if (newEvents.length > 0) {
+      console.log(`\n${colors.bold}📢 RECENT${colors.reset}`);
+      for (const event of newEvents) {
+        const time = new Date(event.timestamp).toLocaleTimeString();
+        const icon = event.event.includes('completed') ? '✅' :
+                    event.event.includes('created') ? '📋' :
+                    event.event.includes('sent') ? '💬' :
+                    event.event.startsWith('agent') ? '👤' :
+                    '📢';
+        console.log(`  ${icon} ${colors.gray}[${time}]${colors.reset} ${event.agent}: ${event.message.slice(0, 50)}${event.message.length > 50 ? '...' : ''}`);
+      }
+    }
+
+    // Inbox for agent (if specified)
+    if (agent) {
+      const inbox = await imece.messages.getInbox(agent, watchAll);
+      const lastCount = lastMessageCount[agent] || 0;
+      const newCount = inbox.length;
+
+      if (newCount > 0) {
+        console.log(`\n${colors.bold}📬 INBOX (${agent})${colors.reset} ${newCount > lastCount ? colors.yellow + '(NEW!)' + colors.reset : ''}`);
+        for (const msg of inbox.slice(0, 5)) {
+          const readIcon = msg.read ? '📭' : '📬';
+          const priorityColor = msg.priority === 'high' ? colors.yellow :
+                               msg.priority === 'urgent' ? colors.red : '';
+          console.log(`  ${readIcon} ${priorityColor}${msg.subject}${colors.reset} ${colors.gray}(from: ${msg.from})${colors.reset}`);
+        }
+      }
+      lastMessageCount[agent] = newCount;
+    }
+
+    // Locks
+    if (status.activeLocks.length > 0) {
+      console.log(`\n${colors.bold}🔒 ACTIVE LOCKS${colors.reset} (${status.activeLocks.length})`);
+      for (const lock of status.activeLocks.slice(0, 3)) {
+        console.log(`  🔒 ${lock.file} ${colors.gray}(by: ${lock.agent})${colors.reset}`);
+      }
+    }
+
+    console.log(`\n${colors.gray}${'─'.repeat(50)}${colors.reset}`);
+    console.log(`${colors.gray}Refresh: ${interval}s | Ctrl+C to exit${colors.reset}`);
+  };
+
+  // Initial render
+  await render();
+
+  // Set up interval
+  const timer = setInterval(async () => {
+    clearScreen();
+    await render();
+  }, interval * 1000);
+
+  // Handle exit
+  process.on('SIGINT', () => {
+    clearInterval(timer);
+    console.log(`\n${colors.cyan}👋 Watch mode ended${colors.reset}`);
+    process.exit(0);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DAEMON COMMAND - Background agent coordination
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function handleDaemon(args: ParsedArgs): Promise<void> {
+  const subcommand = args.args[0] || 'status';
+  const imece = new ImeceManager();
+  const interval = parseInt(args.flags.interval as string) || 5000;
+
+  if (!(await imece.isInitialized())) {
+    error('imece is not initialized. Run: imece init');
+    process.exit(1);
+  }
+
+  const pidFile = `${imece.imeceDir}/.daemon.pid`;
+  const logFile = `${imece.imeceDir}/.daemon.log`;
+  const stateFile = `${imece.imeceDir}/.daemon.state`;
+
+  switch (subcommand) {
+    case 'start': {
+      // Check if already running
+      try {
+        const fs = await import('fs');
+        if (fs.existsSync(pidFile)) {
+          const pid = parseInt(fs.readFileSync(pidFile, 'utf8'));
+          try {
+            process.kill(pid, 0);
+            error('Daemon already running');
+            info(`PID: ${pid}`);
+            process.exit(1);
+          } catch {
+            // Stale PID file, remove it
+            fs.unlinkSync(pidFile);
+          }
+        }
+      } catch { /* ignore */ }
+
+      success('Starting imece daemon...');
+      info(`Interval: ${interval}ms`);
+      info(`Log: ${logFile}`);
+
+      // Write initial state
+      const { writeJson } = await import('../utils/fs.js');
+      await writeJson(stateFile, {
+        status: 'running',
+        startedAt: new Date().toISOString(),
+        interval,
+        pid: process.pid
+      });
+
+      // Start background monitoring
+      console.log(`\n${colors.cyan}🔄 Daemon running in foreground. Press Ctrl+C to stop.${colors.reset}\n`);
+
+      let lastInboxCounts: Record<string, number> = {};
+
+      const checkAgents = async () => {
+        const status = await imece.getStatus({ timelineLimit: 5 });
+        if (!status) return;
+
+        for (const agent of status.agents) {
+          if (agent.status === 'offline') continue;
+
+          // Send heartbeat
+          await imece.agents.heartbeat(agent.name);
+
+          // Check inbox
+          const inbox = await imece.messages.getInbox(agent.name, false);
+          const currentCount = inbox.length;
+          const lastCount = lastInboxCounts[agent.name] || 0;
+
+          if (currentCount > lastCount) {
+            console.log(`${colors.yellow}📬 New message for ${agent.name}!${colors.reset}`);
+            await imece.timeline.append({
+              agent: agent.name,
+              event: 'broadcast',
+              message: `📩 ${agent.name} has ${currentCount} unread message(s)`,
+              data: { count: currentCount }
+            });
+          }
+
+          lastInboxCounts[agent.name] = currentCount;
+        }
+      };
+
+      // Initial check
+      await checkAgents();
+
+      // Set up interval
+      const timer = setInterval(checkAgents, interval);
+
+      // Handle shutdown
+      const shutdown = async () => {
+        clearInterval(timer);
+        console.log(`\n${colors.cyan}🛑 Daemon stopping...${colors.reset}`);
+        await writeJson(stateFile, {
+          status: 'stopped',
+          stoppedAt: new Date().toISOString()
+        });
+        try {
+          const fs = await import('fs');
+          fs.unlinkSync(pidFile);
+        } catch { /* ignore */ }
+        process.exit(0);
+      };
+
+      process.on('SIGINT', shutdown);
+      process.on('SIGTERM', shutdown);
+
+      // Write PID file
+      const fs = await import('fs');
+      await fs.promises.writeFile(pidFile, String(process.pid));
+
+      // Keep process alive
+      break;
+    }
+
+    case 'stop': {
+      try {
+        const fs = await import('fs');
+        if (!fs.existsSync(pidFile)) {
+          error('No daemon PID file found');
+          process.exit(1);
+        }
+
+        const pid = parseInt(fs.readFileSync(pidFile, 'utf8'));
+        try {
+          process.kill(pid, 'SIGTERM');
+          success(`Daemon stopped (PID: ${pid})`);
+          fs.unlinkSync(pidFile);
+          const { writeJson } = await import('../utils/fs.js');
+          await writeJson(stateFile, {
+            status: 'stopped',
+            stoppedAt: new Date().toISOString()
+          });
+        } catch {
+          error('Daemon process not found (stale PID file)');
+          fs.unlinkSync(pidFile);
+        }
+      } catch (e) {
+        error('Failed to stop daemon');
+        process.exit(1);
+      }
+      break;
+    }
+
+    case 'status': {
+      try {
+        const fs = await import('fs');
+        if (fs.existsSync(pidFile)) {
+          const pid = parseInt(fs.readFileSync(pidFile, 'utf8'));
+          try {
+            process.kill(pid, 0);
+            success(`Daemon is running (PID: ${pid})`);
+            if (fs.existsSync(stateFile)) {
+              const state = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+              info(`Started: ${new Date(state.startedAt).toLocaleString()}`);
+              info(`Interval: ${state.interval}ms`);
+            }
+          } catch {
+            console.log(`${colors.red}○${colors.reset} Daemon is stopped (stale PID)`);
+            fs.unlinkSync(pidFile);
+          }
+        } else {
+          console.log(`${colors.red}○${colors.reset} Daemon is stopped`);
+        }
+      } catch {
+        console.log(`${colors.red}○${colors.reset} Daemon is stopped`);
+      }
+      break;
+    }
+
+    case 'trigger': {
+      const agentName = args.args[1];
+      if (!agentName) {
+        error('Agent name required');
+        info('Usage: imece daemon trigger <agent-name>');
+        process.exit(1);
+      }
+
+      const triggerDir = `${imece.imeceDir}/triggers`;
+      const { ensureDir, writeJson } = await import('../utils/fs.js');
+      await ensureDir(triggerDir);
+      await writeJson(`${triggerDir}/${agentName}.trigger`, {
+        agent: agentName,
+        reason: 'manual',
+        timestamp: new Date().toISOString()
+      });
+
+      success(`Triggered agent: ${agentName}`);
+      await imece.timeline.append({
+        agent: agentName,
+        event: 'broadcast',
+        message: `🔔 ${agentName} manually triggered`,
+        data: { reason: 'manual' }
+      });
+      break;
+    }
+
+    default:
+      error(`Unknown daemon subcommand: ${subcommand}`);
+      info('Available: start, stop, status, trigger');
+      process.exit(1);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN
 // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1354,6 +1682,8 @@ const commands: Record<string, () => Promise<void>> = {
   review: () => handleReview(args),
   standup: () => handleStandup(args),
   assign: () => handleAssign(args),
+  watch: () => handleWatch(args),
+  daemon: () => handleDaemon(args),
 };
 
 // Handle task subcommands

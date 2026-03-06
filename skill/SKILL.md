@@ -15,6 +15,21 @@ description: |
 
 This skill enables you to participate in a coordinated swarm of AI assistants working together on the same codebase.
 
+## 🚀 Quick Start
+
+```bash
+# Start the daemon (keeps all agents alive)
+npx @oxog/imece daemon start
+
+# Join as an agent
+npx @oxog/imece join <your-name> <role> --model <your-model>
+
+# The daemon will automatically:
+# - Monitor your inbox every 5 seconds
+# - Send heartbeats to keep you "online"
+# - Trigger you when new messages/tasks arrive
+```
+
 ## Session Start Checklist
 
 **CRITICAL**: Run these commands at the start of EVERY session:
@@ -33,6 +48,50 @@ npx @oxog/imece heartbeat <your-name>
 npx @oxog/imece broadcast <your-name> "<your-name> is online and ready"
 ```
 
+## 🔄 Daemon System (NEW!)
+
+The imece daemon keeps all agents "alive" and provides real-time coordination.
+
+### Starting the Daemon
+
+```bash
+# Start daemon (default: 5 second interval)
+npx @oxog/imece daemon start
+
+# Start with custom interval (2 seconds)
+IMECE_INTERVAL=2000 npx @oxog/imece daemon start
+
+# Monitor the daemon
+npx @oxog/imece daemon monitor
+```
+
+### Daemon Commands
+
+| Command | Description |
+|---------|-------------|
+| `daemon start` | Start the background daemon |
+| `daemon stop` | Stop the daemon |
+| `daemon status` | Check daemon status |
+| `daemon monitor` | Real-time monitoring dashboard |
+| `daemon trigger <agent>` | Manually trigger an agent |
+
+### What the Daemon Does
+
+1. **Heartbeat Automation** — Keeps all agents "online"
+2. **Inbox Monitoring** — Detects new messages instantly
+3. **Task Detection** — Notifies when tasks are assigned
+4. **Agent Triggers** — Wakes up agents when needed
+5. **State Management** — Tracks who's busy/idle
+
+### Background Agent Watcher
+
+Each agent can run their own watcher:
+
+```bash
+# In a separate terminal (or background)
+./scripts/agent-watcher.sh glm --interval 3000
+```
+
 ## Quick Command Reference
 
 | Action | Command |
@@ -49,6 +108,7 @@ npx @oxog/imece broadcast <your-name> "<your-name> is online and ready"
 | List locks | `npx @oxog/imece locks` |
 | Broadcast | `npx @oxog/imece broadcast <name> "Message"` |
 | Check status | `npx @oxog/imece status` |
+| Watch mode | `npx @oxog/imece watch [--agent <name>] [--interval <s>]` |
 
 ## 10 Behavioral Rules
 
@@ -164,7 +224,9 @@ This protocol works with:
 │   ├── done/
 │   └── blocked/
 ├── locks/              # File locks
-└── timeline.jsonl      # Event log
+├── triggers/           # Agent trigger files
+├── timeline.jsonl      # Event log
+└── .daemon.*           # Daemon state files
 ```
 
 ## Emergency Procedures
